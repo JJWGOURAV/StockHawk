@@ -1,9 +1,11 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -24,6 +26,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.rest.NetworkUtils;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.sam_chordas.android.stockhawk.rest.Utils;
@@ -57,12 +60,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mContext = this;
-    ConnectivityManager cm =
-        (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-    isConnected = activeNetwork != null &&
-        activeNetwork.isConnectedOrConnecting();
+    isConnected = NetworkUtils.isNetworkAvailable(this);
     setContentView(R.layout.activity_my_stocks);
     // The intent service is for executing immediate pulls from the Yahoo API
     // GCMTaskService can only schedule tasks, they cannot execute immediately
@@ -159,7 +157,16 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   @Override
   public void onResume() {
     super.onResume();
+    isConnected = NetworkUtils.isNetworkAvailable(this);
+    registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+    runUpdaterService();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    unregisterReceiver(networkStateReceiver);
   }
 
   public void networkToast(){
@@ -214,13 +221,36 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data){
-    mCursorAdapter.swapCursor(data);
+    mCursorAdapter.swapCursor(data) ;
     mCursor = data;
+    if(data.getCount() > 0){
+      findViewById(R.id.empty_view).setVisibility(View.GONE);
+    } else {
+      findViewById(R.id.empty_view).setVisibility(View.VISIBLE);
+    }
   }
 
   @Override
   public void onLoaderReset(Loader<Cursor> loader){
     mCursorAdapter.swapCursor(null);
+    findViewById(R.id.empty_view).setVisibility(View.VISIBLE);
   }
 
+  private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      isConnected = NetworkUtils.isNetworkAvailable(MyStocksActivity.this);
+      runUpdaterService();
+    }
+  };
+
+  private void runUpdaterService(){
+    if(!StockIntentService.isRunning(this)){
+      if(isConnected){
+        mServiceIntent = new Intent(this, StockIntentService.class);
+        mServiceIntent.putExtra("tag", "init");
+        startService(mServiceIntent);
+      }
+    }
+  }
 }

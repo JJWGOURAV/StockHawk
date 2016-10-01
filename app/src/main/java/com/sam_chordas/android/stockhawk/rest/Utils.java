@@ -1,10 +1,19 @@
 package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
+import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
+
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
+
 import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,20 +33,32 @@ public class Utils {
     JSONArray resultsArray = null;
     try{
       jsonObject = new JSONObject(JSON);
+//      Log.d("GOURAV",JSON);
       if (jsonObject != null && jsonObject.length() != 0){
         jsonObject = jsonObject.getJSONObject("query");
         int count = Integer.parseInt(jsonObject.getString("count"));
         if (count == 1){
-          jsonObject = jsonObject.getJSONObject("results")
-              .getJSONObject("quote");
-          batchOperations.add(buildBatchOperation(jsonObject));
+          jsonObject = jsonObject.getJSONObject("results").getJSONObject("quote");
+
+          Log.d("GOURAV",jsonObject.toString());
+          if(!jsonObject.getString("Bid").equals("null")){
+            batchOperations.add(buildBatchOperation(jsonObject));
+          } else {
+            //Invalid stock name
+          }
         } else{
           resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
 
           if (resultsArray != null && resultsArray.length() != 0){
+
+            List<String> currentStockNames = new ArrayList<String>();
             for (int i = 0; i < resultsArray.length(); i++){
               jsonObject = resultsArray.getJSONObject(i);
-              batchOperations.add(buildBatchOperation(jsonObject));
+
+              if(!jsonObject.getString("Bid").equals("null") && !currentStockNames.contains(jsonObject.getString("Bid"))){
+                batchOperations.add(buildBatchOperation(jsonObject));
+                currentStockNames.add(jsonObject.getString("Bid"));
+              }
             }
           }
         }
@@ -91,5 +112,16 @@ public class Utils {
       e.printStackTrace();
     }
     return builder.build();
+  }
+
+  public static boolean isOldStockName(Context context,String input){
+    Cursor c = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+            new String[] { QuoteColumns.SYMBOL }, QuoteColumns.SYMBOL + "= ?",
+            new String[] { input }, null);
+    if (c.getCount() != 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

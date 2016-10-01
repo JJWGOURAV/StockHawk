@@ -1,6 +1,8 @@
 package com.sam_chordas.android.stockhawk.service;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,5 +31,18 @@ public class StockIntentService extends IntentService {
     // We can call OnRunTask from the intent service to force it to run immediately instead of
     // scheduling a task.
     stockTaskService.onRunTask(new TaskParams(intent.getStringExtra("tag"), args));
+  }
+
+  public static boolean isRunning(Context ctx){
+    ActivityManager manager = (ActivityManager) ctx
+            .getSystemService(Context.ACTIVITY_SERVICE);
+    for (ActivityManager.RunningServiceInfo service : manager
+            .getRunningServices(Integer.MAX_VALUE)) {
+      if (StockIntentService.class.getName().equals(
+              service.service.getClassName())) {
+        return true;
+      }
+    }
+    return false;
   }
 }
