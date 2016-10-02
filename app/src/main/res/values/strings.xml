@@ -11,4 +11,8 @@
   <string name="input_prefill"></string>
   <string name="network_toast">Uh-oh! This app requires an internet connection</string>
   <string name="no_data_available">No stocks to show at this time</string>
+  <string name="invalid_stock_text">Invalid Stock name</string>
+  <string name="stock_already_saved">This stock is already saved!</string>
+  <string name="add_stock_button">Add Stock Button</string>
+  <string name="list_of_stocks">List of Stocks</string>
 </resources>

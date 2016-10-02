@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
+import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
@@ -132,7 +133,7 @@ public class StockTaskService extends GcmTaskService{
           if(contentProviderOperations != null && !contentProviderOperations.isEmpty()) {
             mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY, contentProviderOperations);
           } else{
-            Toast.makeText(mContext,"Invalid stock name",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext,mContext.getResources().getString(R.string.invalid_stock_text),Toast.LENGTH_SHORT).show();
             Log.e(LOG_TAG,"Invalid stock name");
           }
         }catch (RemoteException | OperationApplicationException e){

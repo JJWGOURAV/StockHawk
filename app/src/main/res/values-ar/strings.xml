@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">الأسهم هوك</string>
+
+    <string name="action_example">العمل سبيل المثال</string>
+
+    <string name="action_settings">إعدادات</string>
+    <string name="action_change_units">وحدات التغيير</string>
+    <string name="symbol_search">رمز البحث</string>
+    <string name="content_test">بحث عن الأوراق المالية رمز</string>
+    <string name="input_hint">FB</string>
+    <string name="input_prefill"></string>
+    <string name="network_toast">اه اوه! هذا التطبيق يتطلب اتصال بالإنترنت</string>
+    <string name="no_data_available">يوجد مخزون لتظهر في هذا الوقت</string>
+    <string name="invalid_stock_text">اسم اسهم غير صالح</string>
+    <string name="stock_already_saved">يتم حفظ هذه الأسهم بالفعل!</string>
+    <string name="add_stock_button">إضافة زر المالية</string>
+    <string name="list_of_stocks">قائمة الأسهم</string>
+</resources>

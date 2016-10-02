@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/recycler_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:contentDescription="@string/list_of_stocks"
       />
 
   <TextView
@@ -18,7 +18,8 @@
       android:layout_height="match_parent"
       android:gravity="center"
       android:visibility="gone"
-      android:text="@string/no_data_available" />
+      android:text="@string/no_data_available"
+      android:contentDescription="@string/no_data_available"/>
 
   <com.melnykov.fab.FloatingActionButton
       android:id="@+id/fab"
@@ -27,6 +28,7 @@
       android:layout_gravity="bottom|right"
       android:layout_margin="16dp"
       android:src="@drawable/ic_add_white_24dp"
+      android:contentDescription="@string/add_stock_button"
       fab:fab_colorNormal="@color/material_blue_500"
       fab:fab_colorPressed="@color/material_blue_600"
       fab:fab_colorRipple="@color/ripple"
