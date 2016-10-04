@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.sam_chordas.android.stockhawk.data.HistoricalQuoteColumns;
+import com.sam_chordas.android.stockhawk.data.HistoricalQuoteProvider;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
@@ -69,6 +71,33 @@ public class Utils {
     return batchOperations;
   }
 
+  public static ArrayList quoteHistoricalJsonToContentVals(String JSON){
+    ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
+    JSONObject jsonObject = null;
+    JSONArray resultsArray = null;
+    try {
+      jsonObject = new JSONObject(JSON);
+//      Log.d("GOURAV",JSON);
+      if (jsonObject != null && jsonObject.length() != 0) {
+        jsonObject = jsonObject.getJSONObject("query");
+        int count = Integer.parseInt(jsonObject.getString("count"));
+
+        resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
+
+        if (resultsArray != null && resultsArray.length() != 0) {
+
+          for (int i = 0; i < resultsArray.length(); i++) {
+            jsonObject = resultsArray.getJSONObject(i);
+            batchOperations.add(buildHistoricalDataBatchOperation(jsonObject));
+          }
+        }
+      }
+    }catch (JSONException e){
+      Log.e(LOG_TAG, "String to JSON failed: " + e);
+    }
+    return batchOperations;
+  }
+
   public static String truncateBidPrice(String bidPrice){
     bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
     return bidPrice;
@@ -107,6 +136,25 @@ public class Utils {
       }else{
         builder.withValue(QuoteColumns.ISUP, 1);
       }
+
+    } catch (JSONException e){
+      e.printStackTrace();
+    }
+    return builder.build();
+  }
+
+  public static ContentProviderOperation buildHistoricalDataBatchOperation(JSONObject jsonObject){
+    ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
+            HistoricalQuoteProvider.Quotes.CONTENT_URI);
+    try {
+      builder.withValue(HistoricalQuoteColumns.SYMBOL, jsonObject.getString("Symbol"));
+      builder.withValue(HistoricalQuoteColumns.DATE, jsonObject.getString("Date"));
+      builder.withValue(HistoricalQuoteColumns.OPEN, jsonObject.getString("Open"));
+      builder.withValue(HistoricalQuoteColumns.HIGH, jsonObject.getString("High"));
+      builder.withValue(HistoricalQuoteColumns.LOW, jsonObject.getString("Low"));
+      builder.withValue(HistoricalQuoteColumns.CLOSE, jsonObject.getString("Close"));
+      builder.withValue(HistoricalQuoteColumns.VOLUME, jsonObject.getString("Volume"));
+      builder.withValue(HistoricalQuoteColumns.ADJ_CLOSE, jsonObject.getString("Adj_Close"));
 
     } catch (JSONException e){
       e.printStackTrace();
