@@ -42,7 +42,7 @@ import static com.sam_chordas.android.stockhawk.R.id.change;
 import static com.sam_chordas.android.stockhawk.R.id.fromDate;
 import static com.sam_chordas.android.stockhawk.R.id.toDate;
 
-public class DetailActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<Cursor>{
+public class DetailActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<Cursor>,DatePickerFragment.DateChanged{
 
     private static final String LOG_TAG = DetailActivity.class.getSimpleName();
     private String symbol;
@@ -167,54 +167,17 @@ public class DetailActivity extends AppCompatActivity  implements LoaderManager.
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    private DatePickerFragment.DateChanged dateChangedListener = new DatePickerFragment.DateChanged() {
-        @Override
-        public void dateChanged(String date, boolean isStartDate) {
-            if (isStartDate) {
-                startDate = date;
-                fromDate.setText(startDate);
-            } else {
-                endDate = date;
-                toDate.setText(endDate);
-            }
-            getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, DetailActivity.this);
-        }
-    };
-
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        public static interface DateChanged{
-            public abstract void dateChanged(String startDate,boolean isStartDate);
+    @Override
+    public void dateChanged(String date, boolean isStartDate) {
+        if (isStartDate) {
+            startDate = date;
+            fromDate.setText(startDate);
+        } else {
+            endDate = date;
+            toDate.setText(endDate);
         }
 
-
-        boolean isStartDate = false;
-
-        public static DatePickerFragment newInstance(Bundle args){
-            DatePickerFragment fragment = new DatePickerFragment();
-            if(args!=null){
-                fragment.isStartDate = args.getBoolean("isStartDate");
-            }
-            return fragment;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            ((DateChanged)getActivity()).dateChanged(year + "-" + (month+1) + "-" + day,isStartDate);
-
-        }
+        DetailActivity.this.getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, DetailActivity.this);
     }
 
 
@@ -263,3 +226,4 @@ public class DetailActivity extends AppCompatActivity  implements LoaderManager.
         toDate.setText(endDate);
     }
 }
+

@@ -59,6 +59,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MyStocksActivity" />
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="77ba5b87ae86061ca8e22ca97744f5ce67206daa" />
     </application>
 
 </manifest>
