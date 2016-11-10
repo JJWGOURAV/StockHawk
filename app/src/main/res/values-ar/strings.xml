@@ -8,7 +8,7 @@
     <string name="action_change_units">وحدات التغيير</string>
     <string name="symbol_search">رمز البحث</string>
     <string name="content_test">بحث عن الأوراق المالية رمز</string>
-    <string name="input_hint">FB</string>
+    <string name="input_hint">اسم الأسهم</string>
     <string name="input_prefill"></string>
     <string name="network_toast">اه اوه! هذا التطبيق يتطلب اتصال بالإنترنت</string>
     <string name="no_data_available">يوجد مخزون لتظهر في هذا الوقت</string>
@@ -16,4 +16,17 @@
     <string name="stock_already_saved">يتم حفظ هذه الأسهم بالفعل!</string>
     <string name="add_stock_button">إضافة زر المالية</string>
     <string name="list_of_stocks">قائمة الأسهم</string>
+    <string name="filter">فلتر</string>
+    <string name="from">من عند</string>
+    <string name="to">إلى</string>
+    <string name="pick_date">اختيار تاريخ</string>
+
+    <string-array name="filter_options">
+        <item name="high">عالي</item>
+        <item name="low">منخفض</item>
+        <item name="adj_close">قريب</item>
+        <item name="open">فتح</item>
+        <item name="close">أغلق</item>
+    </string-array>
+
 </resources>

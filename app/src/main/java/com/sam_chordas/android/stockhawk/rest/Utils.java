@@ -13,7 +13,10 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -171,5 +174,35 @@ public class Utils {
     } else {
       return false;
     }
+  }
+
+  public static boolean isToday(String lastDate){
+
+    if(lastDate == null)
+      return true;
+
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    try {
+      Date date = format.parse(lastDate);
+
+      if(date == new Date()){
+        return true;
+      }
+
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
+
+  public static String today(){
+    SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+
+    Date date = new Date();
+    String datetime = dateformat.format(date);
+//            System.out.println("Current Date Time : " + datetime);
+
+    return datetime;
   }
 }

@@ -56,6 +56,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   private Context mContext;
   private Cursor mCursor;
   boolean isConnected;
+  private RecyclerView recyclerView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         networkToast();
       }
     }
-    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+    recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
 
@@ -86,6 +87,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 Intent intent = new Intent(MyStocksActivity.this,DetailActivity.class);
                 mCursor.moveToPosition(position);
                 intent.putExtra(UpdateHistoricalDataService.SYMBOL,mCursor.getString(1));
+                intent.putExtra("bid_price",mCursor.getString(2));
+                intent.putExtra("is_up",mCursor.getInt(5));
+                intent.putExtra("percent_change",mCursor.getString(3));
+                intent.putExtra("change",mCursor.getString(4));
                 startActivity(intent);
               }
             }));

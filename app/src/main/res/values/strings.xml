@@ -11,8 +11,26 @@
     <string name="input_prefill"></string>
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
     <string name="no_data_available">No stocks to show at this time</string>
+    <string name="no_historical_data_available">No historical data to show at this time</string>
     <string name="invalid_stock_text">Invalid Stock name</string>
     <string name="stock_already_saved">This stock is already saved!</string>
     <string name="add_stock_button">Add Stock Button</string>
     <string name="list_of_stocks">List of Stocks</string>
+    <string name="filter">Filter</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="pick_date">Pick Date</string>
+    <string name="default_start_date" translatable="false">2016-09-11</string>
+
+    <string-array name="filter_options">
+        <item name="high">High</item>
+        <item name="low">Low</item>
+        <item name="adj_close">Adj_close</item>
+        <item name="open">Open</item>
+        <item name="close">Close</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

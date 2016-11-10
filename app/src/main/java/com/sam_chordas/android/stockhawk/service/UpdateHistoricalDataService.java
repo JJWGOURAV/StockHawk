@@ -47,8 +47,8 @@ public class UpdateHistoricalDataService extends IntentService {
     private Context mContext;
     private OkHttpClient client = new OkHttpClient();
 
-    private String startDate = "2016-09-11";
-    private String endDate = today();
+    private String startDate;
+    private String endDate = Utils.today();
 
     public UpdateHistoricalDataService() {
         super("UpdateHistoricalDataService");
@@ -72,10 +72,13 @@ public class UpdateHistoricalDataService extends IntentService {
             mContext = this;
         }
 
+        startDate = mContext.getResources().getString(R.string.default_start_date);
+        endDate = Utils.today();
+
         String s = getLastStoredDate(param1);
         Log.d(LOG_TAG,"Last Stored Date:" + s);
 
-        if(!isToday(s)){
+        if(!Utils.isToday(s)){
             //Data is already updated.
             return;
         }
@@ -152,33 +155,5 @@ public class UpdateHistoricalDataService extends IntentService {
         }
     }
 
-    private boolean isToday(String lastDate){
 
-        if(lastDate == null)
-            return true;
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date date = format.parse(lastDate);
-
-            if(date == new Date()){
-                return true;
-            }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    private String today(){
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date date = new Date();
-        String datetime = dateformat.format(date);
-//            System.out.println("Current Date Time : " + datetime);
-
-        return datetime;
-    }
 }
